@@ -10,11 +10,13 @@ pipeline {
 
         stage('Install & Test') {
             steps {
+                // Spin up a temporary Python container to run tests in isolation
                 sh '''
-                    python3 -m venv venv
-                    . venv/bin/activate
-                    pip install -r requirements.txt
-                    pytest
+                    docker run --rm \
+                      -v "$(pwd)":/app \
+                      -w /app \
+                      python:3.11-slim \
+                      bash -c "pip install -r requirements.txt && pytest"
                 '''
             }
         }
