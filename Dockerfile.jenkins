@@ -1,0 +1,15 @@
+FROM jenkins/jenkins:lts
+
+USER root
+
+# Install standard Linux prerequisite tools
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Use the official Docker convenience script to install the engine CLI seamlessly
+RUN curl -fsSL https://get.docker.com | sh
+
+# Keep running as root to guarantee permission over the socket
+USER root
