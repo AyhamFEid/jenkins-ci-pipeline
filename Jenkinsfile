@@ -10,12 +10,12 @@ pipeline {
 
         stage('Install & Test') {
             steps {
-                // Bundle workspace files into a tar stream, send them to the container, and run tests
+                // Bundle workspace files, unpack them, and run pytest with PYTHONPATH set
                 sh '''
                     tar -cf - app tests requirements.txt | docker run --rm -i \
                       -w /app \
                       python:3.11-slim \
-                      bash -c "tar -xf - && pip install --no-cache-dir -r requirements.txt && pytest"
+                      bash -c "tar -xf - && pip install --no-cache-dir -r requirements.txt && PYTHONPATH=. pytest"
                 '''
             }
         }
